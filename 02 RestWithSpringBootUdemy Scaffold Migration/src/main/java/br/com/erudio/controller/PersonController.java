@@ -18,7 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.erudio.data.vo.v1.PersonVO;
 import br.com.erudio.service.PersonServices;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
+// CORS habilitado no controller em especifico
+// @CrossOrigin(origins = {"http://localhost:8080", "http://www.erudio.com.br"})
+@Api(description = "Description for Person", tags = {"Person Endpoint"})
 @RestController
 @RequestMapping("api/person/v1")
 public class PersonController {	
@@ -26,18 +31,22 @@ public class PersonController {
 	@Autowired
 	private PersonServices personServices;
 
+	@ApiOperation(value = "FindById people recorded")
 	@GetMapping(value = "/{id}", produces = {"application/json", "application/xml","application/x-yaml"})
 	public PersonVO findById(@PathVariable("id") Long id) {
 		PersonVO personVo = personServices.findById(id);
 		personVo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
 		return personVo;
 	}
+	
+	@ApiOperation(value = "Delete people recorded")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		personServices.delete(id);
 		return ResponseEntity.ok().build();
 	}
 	
+	@ApiOperation(value = "Find all people recorded")
 	@GetMapping(produces = {"application/json", "application/xml","application/x-yaml"})
 	public List<PersonVO> findAll(String id) {
 		List<PersonVO> persons = personServices.findAll();
@@ -46,6 +55,7 @@ public class PersonController {
 		return persons;
 	}
 	
+	@ApiOperation(value = "Create people recorded")
 	@PostMapping(produces = {"application/json", "application/xml","application/x-yaml"}, 
 			consumes = {"application/json", "application/xml","application/x-yaml"})
 	public PersonVO create(@RequestBody PersonVO person) {
@@ -54,6 +64,7 @@ public class PersonController {
 		return personVo;
 	}
 	
+	@ApiOperation(value = "Update people recorded")
 	@PutMapping(produces = {"application/json", "application/xml","application/x-yaml"}, 
 			consumes = {"application/json", "application/xml","application/x-yaml"})
 	public PersonVO update(@RequestBody PersonVO person) {
