@@ -12,7 +12,7 @@ deploy:
   script:
     docker push docker push rapha13/rest-with-springboot;
     docker push docker push rapha13/mysql-rest-with-springboot;
-   on:
+  on:
     branch: master
 notifications: 
   email: false
